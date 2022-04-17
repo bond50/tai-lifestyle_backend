@@ -1,9 +1,10 @@
 import express from "express";
-
+import cors from "cors";
 import bodyParser from 'body-parser'
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import {} from 'dotenv/config'
 import serviceRoutes from "./routes/services.js";
 import serviceCategoryRoutes from "./routes/serviceCategory.js";
 import authRoutes from "./routes/auth.js";
@@ -44,20 +45,20 @@ app.use(bodyParser.urlencoded({limit: "200mb", extended: true}));
 
 
 //cors
-
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Origin,X-Requested-With,Content-Type,Accept,Authorization')
-
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'PUT,PATCH,POST,OPTIONS,DELETE,GET')
-        return res.status(200).json({})
-    }
-    next()
-})
+app.use(cors())
+//
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', '*')
+//     res.header(
+//         'Access-Control-Allow-Headers',
+//         'Origin,X-Requested-With,Content-Type,Accept,Authorization')
+//
+//     if (req.method === 'OPTIONS') {
+//         res.header('Access-Control-Allow-Methods', 'PUT,PATCH,POST,OPTIONS,DELETE,GET')
+//         return res.status(200).json({})
+//     }
+//     next()
+// })
 
 
 // port

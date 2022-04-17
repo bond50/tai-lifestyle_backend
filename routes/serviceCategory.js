@@ -1,4 +1,9 @@
 import express from "express";
+
+
+
+const router = express.Router()
+
 //validators
 import {runValidation} from '../validators/index.js'
 import {categoryCreateValidator} from "../validators/category.js";
@@ -7,9 +12,6 @@ import {categoryCreateValidator} from "../validators/category.js";
 import {adminMiddleware, requireSignin} from "../controllers/auth.js";
 
 import {create, list, read, readCatNames, remove} from "../controllers/serviceCategories.js";
-
-
-const router = express.Router()
 
 router.post('/service-category', categoryCreateValidator, runValidation, requireSignin, adminMiddleware, create)
 router.get('/service-categories', list);

@@ -1,24 +1,24 @@
 import express from "express";
-import {
-    create,
-    featuredBlogs,
-    list,
-    listAllBlogsCategoriesTags,
-    listByUser,
-    listHomePageBlogs,
-    listPending,
-    listPendingByUser,
-    listRelated,
-    listSearch,
-    photo,
-    read,
-    remove,
-    update
-} from '../controllers/blog.js'
-
-import {adminMiddleware, authMiddleware, canUpdateDeleteBlog, requireSignin} from '../controllers/auth.js'
 
 const router = express.Router();
+import {
+    create,
+    list,
+    listAllBlogsCategoriesTags,
+    read,
+    listHomePageBlogs,
+    listByUser,
+    listPendingByUser,
+    remove,
+    update,
+    photo,
+    listRelated,
+    listSearch,
+    featuredBlogs,
+    listPending
+}  from '../controllers/blog.js'
+
+import {requireSignin, adminMiddleware, authMiddleware, canUpdateDeleteBlog}  from '../controllers/auth.js'
 
 
 router.post('/blog', requireSignin, adminMiddleware, create);

@@ -1,12 +1,12 @@
 import express from "express";
 
-import {adminMiddleware, requireSignin,} from '../controllers/auth.js'
-import {create, list, read, remove} from '../controllers/category.js'
-//validators
-import {runValidation} from '../validators/index.js'
-import {categoryCreateValidator} from '../validators/category.js'
-
+import {requireSignin, adminMiddleware,}  from '../controllers/auth.js'
+import {create, list, read, remove}  from '../controllers/category.js'
 const router = express.Router()
+
+//validators
+import {runValidation}  from '../validators/index.js'
+import {categoryCreateValidator}  from '../validators/category.js'
 
 
 router.post('/category', categoryCreateValidator, runValidation, requireSignin, adminMiddleware, create)

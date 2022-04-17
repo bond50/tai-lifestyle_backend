@@ -1,7 +1,16 @@
 import express from "express";
 import {adminMiddleware, requireSignin} from "../controllers/auth.js";
 
-import {create, list, listSingle, photo, read, removeUser, update} from "../controllers/team.js";
+import {
+    list,
+    photo,
+    removeUser,
+    update,
+    read,
+    create,
+    listSingle
+} from "../controllers/team.js";
+
 
 
 const router = express.Router()

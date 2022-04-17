@@ -2,8 +2,7 @@ import express from "express";
 import {
     create,
     list,
-    listAllServicesCategoriesTags,
-    listFeatured,
+    listAllServicesCategoriesTags, listFeatured,
     listRelated,
     listServiceNamesAndSlugs,
     photo,

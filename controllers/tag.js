@@ -1,7 +1,8 @@
-import Tag from '../models/tag.js'
-import Blog from '../models/blog.js'
-import slugify from 'slugify'
-import {errorHandler} from '../helpers/dbErrorHandler.js'
+import Tag from'../models/tag.js'
+import Blog from'../models/blog.js'
+import slugify from'slugify'
+import {errorHandler} from'../helpers/dbErrorHandler.js'
+
 
 
 export const create = (req, res) => {

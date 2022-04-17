@@ -6,6 +6,8 @@ import {errorHandler} from "../helpers/dbErrorHandler.js";
 import probe from "probe-image-size";
 import shortId from "shortid";
 
+
+
 export const create = (req, res) => {
     const {name, email, about, facebook, twitter, companyRole, instagram} = req.body
     let username = shortId.generate();

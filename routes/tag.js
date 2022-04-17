@@ -1,13 +1,14 @@
 import express from "express";
+
+const router = express.Router();
+
 // controllers
-import {adminMiddleware, requireSignin} from '../controllers/auth.js'
+import {requireSignin, adminMiddleware} from '../controllers/auth.js'
 import {create, list, read, remove} from '../controllers/tag.js'
 
 // validators
 import {runValidation} from '../validators/index.js'
 import {createTagValidator} from '../validators/tag.js'
-
-const router = express.Router();
 
 // only difference is methods not name 'get' | 'post' | 'delete'
 router.post('/tag', createTagValidator, runValidation, requireSignin, adminMiddleware, create);
