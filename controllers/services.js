@@ -80,7 +80,6 @@ export const create = (req, res) => {
 export const listFeatured = (req, res) => {
     Page.find({featured: true,accepted:true})
         .select('_id title excerpt slug')
-        .sort({createdAt: -1})
         .limit(4)
         .exec((err, data) => {
             if (err) {
