@@ -77,7 +77,7 @@ export const multipleFileUpload = async (req, res) => {
             );
 
         })
-        await fs.rm('uploads', {recursive: true});
+        // await fs.rm('uploads', {recursive: true});
     })
 }
 
