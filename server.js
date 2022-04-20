@@ -17,6 +17,12 @@ import tagRoutes from "./routes/tag.js";
 import contactRoutes from "./routes/form.js";
 import ip from "ip";
 
+import uploadRoute from "./routes/fileUpload.js";
+
+import galleryTagRoutes from "./routes/gallery-tag.js";
+
+import documentTagRoutes from "./routes/document-tag.js";
+
 const app = express()
 
 //db
@@ -76,6 +82,9 @@ app.use('/api', blogRoutes);
 app.use('/api', tagRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', contactRoutes);
+app.use('/api', uploadRoute);
+app.use('/api', galleryTagRoutes);
+app.use('/api', documentTagRoutes);
 
 
 process.on('uncaughtException', function (exception) {

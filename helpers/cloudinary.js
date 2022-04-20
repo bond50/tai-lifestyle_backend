@@ -1,6 +1,6 @@
 import cloudinary from "cloudinary";
 
-require('dotenv').config();
+import {} from 'dotenv/config'
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -8,7 +8,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-exports.cloudinaryUpload = (file, folder) => {
+export function cloudinaryUpload(file, folder) {
     return new Promise(resolve => {
         cloudinary.uploader.upload(file, (result) => {
             console.log(result)
@@ -30,8 +30,10 @@ exports.cloudinaryUpload = (file, folder) => {
 }
 
 
-exports.cloudinaryRetrieve = (folder) => cloudinary.v2.search
-    .expression(`folder:${folder}`)
-    .sort_by('public_id', 'desc')
-    .with_field('tags')
-    .execute()
+export function cloudinaryRetrieve(folder) {
+    return cloudinary.v2.search
+        .expression(`folder:${folder}`)
+        .sort_by('public_id', 'desc')
+        .with_field('tags')
+        .execute();
+}

@@ -26,43 +26,6 @@ const IMAGEFORMATS = [
 
 const docFormats = [
     'application/pdf',
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-    "application/vnd.ms-word.document.macroEnabled.12",
-    "application/vnd.ms-word.template.macroEnabled.12",
-
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
-    "application/vnd.ms-excel.sheet.macroEnabled.12",
-    "application/vnd.ms-excel.template.macroEnabled.12",
-    "application/vnd.ms-excel.addin.macroEnabled.12",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/vnd.openxmlformats-officedocument.presentationml.template",
-    "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-    "application/vnd.ms-powerpoint.addin.macroEnabled.12",
-    "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
-    "application/vnd.ms-powerpoint.template.macroEnabled.12",
-    "application/vnd.ms-powerpoint.slideshow.macroEnabled.12",
-    "application/excel",
-    "application/x-excel",
-    "application/x-msexcel",
-    "application/ms-doc",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/mspowerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/mspowerpoint",
-    "application/mspowerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-    "application/mspowerpoint",
-    "application/vnd.ms-powerpoint.addin.macroEnabled.12",
-    "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
-    "application/vnd.ms-powerpoint.slideshow.macroEnabled.12",
-    "application/vnd.ms-powerpoint.template.macroEnabled.12",
-    "application/msaccess"
-
 ];
 
 let FILE_FORMATS = [...new Set(docFormats)];
@@ -90,9 +53,9 @@ const uploadImages = multer({storage, fileFilter: imageFeFilter, limits: {fileSi
 const uploadFiles = multer({storage, docFilter, limits: {fileSize: maxSize}})
 
 
-exports.multipleImagesUploadCtrl = uploadImages.array('files')
+export const multipleImagesUploadCtrl = uploadImages.array('files');
 
-exports.multipleFilesUploadCtrl = uploadFiles.array('files');
+export const multipleFilesUploadCtrl = uploadFiles.array('files');
 
 // exports.singleUploadCtrl = upload.single('file');
 
