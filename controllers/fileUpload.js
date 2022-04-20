@@ -77,7 +77,7 @@ export const multipleFileUpload = async (req, res) => {
             );
 
         })
-        // await fs.rm('uploads', {recursive: true});
+        await fs.rm('uploads', {recursive: true});
     })
 }
 
@@ -115,7 +115,7 @@ export const getGallery = async (req, res) => {
                     error: errorHandler(err)
                 });
             }
-            console.log(data)
+
             res.json(data);
         });
 }
