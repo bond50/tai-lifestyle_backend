@@ -22,6 +22,7 @@ import uploadRoute from "./routes/fileUpload.js";
 import galleryTagRoutes from "./routes/gallery-tag.js";
 
 import documentTagRoutes from "./routes/document-tag.js";
+import path from "path";
 
 const app = express()
 
@@ -86,7 +87,7 @@ app.use(cors({
 const port = process.env.PORT || 8000
 
 // route middleware
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', serviceRoutes);
 app.use('/api', authRoutes);
 app.use('/api', serviceCategoryRoutes);
