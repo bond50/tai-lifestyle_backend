@@ -56,7 +56,7 @@ app.use(bodyParser.urlencoded({limit: "200mb", extended: true}));
 //cors
 
 
-const allowedOrigins = ['http://localhost:3000', 'https://tailifestyle.com', 'https://www.tailifestyle.com'];
+const allowedOrigins = ['http://localhost:3000','http://141.95.42.124','https://141.95.42.124', 'https://tailifestyle.com', 'https://www.tailifestyle.com'];
 app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin
@@ -106,10 +106,9 @@ app.use('/api', galleryTagRoutes);
 app.use('/api', documentTagRoutes);
 
 
-process.on('uncaughtException', function (exception) {
-    console.log(exception); // to see your exception details in the console
-    // if you are on production, maybe you can send the exception details to your
-    // email as well ?
+process.on('uncaughtException', function(err) {
+    console.log('Caught exception: ' + err);
+    throw err;
 });
 
 app.listen(port, `0.0.0.0`, () => {
