@@ -30,7 +30,6 @@ export const list = (req, res) => {
 
 export const remove = (req, res) => {
     const slug = req.params.slug.toLowerCase();
-    console.log("slug", slug)
     tagDelete(slug, res, Tag)
 };
 
@@ -53,7 +52,6 @@ export const read = (req, res) => {
                         error: errorHandler(err)
                     });
                 }
-                console.log(data)
                 res.json({tag: tag, data: data});
             });
     });

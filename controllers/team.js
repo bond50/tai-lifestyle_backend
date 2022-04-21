@@ -101,7 +101,6 @@ export const update = (req, res) => {
 
                 oldUser.save((err, result) => {
                     if (err) {
-                        console.log('profile update error', err);
                         return res.status(400).json({
                             error: errorHandler(err)
                         });

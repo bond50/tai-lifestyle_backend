@@ -11,7 +11,6 @@ export const create = (req, res) => {
     let tag = new Tag({name, slug});
     tag.save((err, data) => {
         if (err) {
-            console.log(err);
             return res.status(400).json({
                 error: errorHandler(err)
             });

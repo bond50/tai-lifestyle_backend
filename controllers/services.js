@@ -216,7 +216,6 @@ export const remove = (req, res) => {
             });
         }
         data.photo = undefined
-        console.log(data)
         res.json({
             message: `${capitalizeFirstLetter(data.title)} page deleted successfully`
         });

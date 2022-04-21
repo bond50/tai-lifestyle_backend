@@ -58,7 +58,7 @@ export const create = (req, res) => {
         // categories and tags
         let arrayOfCategories = categories && categories.split(',');
         let arrayOfTags = tags && tags.split(',');
-        console.log('array', arrayOfTags)
+
 
         if (files.photo) {
             if (files.photo.size > 2000000) {
@@ -76,8 +76,7 @@ export const create = (req, res) => {
                     error: errorHandler(err)
                 });
             }
-            // res.json(result);
-            console.log(result)
+
             Blog.findByIdAndUpdate(result._id, {$push: {categories: arrayOfCategories}}, {new: true}).exec(
                 (err, result) => {
                     if (err) {
@@ -390,7 +389,6 @@ export const listPendingByUser = (req, res) => {
                             error: errorHandler(err)
                         });
                     }
-                    console.log(data)
                     res.json(data)
                 })
 
