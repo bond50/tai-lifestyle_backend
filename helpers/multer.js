@@ -31,7 +31,7 @@ const docFormats = [
 let FILE_FORMATS = [...new Set(docFormats)];
 
 
-const maxSize = 2 * 1024 * 1024; // for 2MB
+const maxSize = 10 * 1024 * 1024; // for 2MB
 
 const imageFeFilter = function (req, file, cb) {
     if (IMAGEFORMATS.includes(file.mimetype)) {
