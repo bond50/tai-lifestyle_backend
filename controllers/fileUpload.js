@@ -205,7 +205,7 @@ export const galleryCreate = async (req, res,) => {
             );
 
         })
-        await fs.rm('uploads', {recursive: true});
+
     })
 
 }
