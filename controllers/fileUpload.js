@@ -73,11 +73,12 @@ export const multipleFileUpload = async (req, res) => {
                             data: result,
                             message: `Files Uploaded to ${folder} directory in cloudinary servers`,
                         });
+                    return
                 }
             );
 
         })
-        await fs.rm('uploads', {recursive: true});
+        // await fs.rm('uploads', {recursive: true});
     })
 }
 
