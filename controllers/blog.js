@@ -346,7 +346,7 @@ export const listHomePageBlogs = (req, res) => {
     Blog.find({accepted: true})
         .select('_id title slug excerpt createdAt updatedAt')
         .limit(3)
-        .sort({createdAt: -1})
+        .sort({updatedAt: -1})
         .exec((err, data) => {
             if (err) {
                 return res.json({
