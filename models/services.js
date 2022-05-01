@@ -15,6 +15,9 @@ const serviceSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        icon: {
+            type: String,
+        },
         accepted: {
             type: Boolean,
             default: true,

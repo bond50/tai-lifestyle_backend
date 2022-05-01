@@ -79,7 +79,7 @@ export const create = (req, res) => {
 }
 export const listFeatured = (req, res) => {
     Page.find({featured: true,accepted:true})
-        .select('_id title excerpt slug')
+        .select('_id title icon excerpt slug')
         .limit(4)
         .exec((err, data) => {
             if (err) {
@@ -161,7 +161,7 @@ export const read = (req, res) => {
         // .select("-photo")
         .populate('categories', '_id name slug')
         .populate('postedBy', '_id name username')
-        .select('_id title body accepted featured excerpt slug metaTitle metaDesc categories tags postedBy createdAt updatedAt')
+        .select('_id title body accepted icon featured excerpt slug metaTitle metaDesc categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
