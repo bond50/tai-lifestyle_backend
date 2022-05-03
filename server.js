@@ -56,35 +56,6 @@ app.use(bodyParser.urlencoded({limit: "200mb", extended: true}));
 //cors
 
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Origin,X-Requested-With,Content-Type,Accept,Authorization')
-
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'PUT,PATCH,POST,DELETE,GET')
-        return res.status(200).json({})
-    }
-    next()
-})
-
-
-// const allowedOrigins = ['http://localhost:3000','http://141.95.42.124','https://141.95.42.124', 'https://tailifestyle.com', 'https://www.tailifestyle.com'];
-// app.use(cors({
-//     origin: function (origin, callback) {
-//         // allow requests with no origin
-//         // (like mobile apps or curl requests)
-//         if (!origin) return callback(null, true);
-//         if (allowedOrigins.indexOf(origin) === -1) {
-//             const msg = 'The CORS policy for this site does not ' +
-//                 'allow access from the specified Origin.';
-//             return callback(new Error(msg), false);
-//         }
-//         return callback(null, true);
-//     }
-// }));
-//
 // app.use((req, res, next) => {
 //     res.header('Access-Control-Allow-Origin', '*')
 //     res.header(
@@ -92,11 +63,40 @@ app.use((req, res, next) => {
 //         'Origin,X-Requested-With,Content-Type,Accept,Authorization')
 //
 //     if (req.method === 'OPTIONS') {
-//         res.header('Access-Control-Allow-Methods', 'PUT,PATCH,POST,OPTIONS,DELETE,GET')
+//         res.header('Access-Control-Allow-Methods', 'PUT,PATCH,POST,DELETE,GET')
 //         return res.status(200).json({})
 //     }
 //     next()
 // })
+
+
+const allowedOrigins = ['http://localhost:3000','http://141.95.42.124','https://141.95.42.124', 'https://tailifestyle.com', 'https://www.tailifestyle.com'];
+app.use(cors({
+    origin: function (origin, callback) {
+        // allow requests with no origin
+        // (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
+}));
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Origin,X-Requested-With,Content-Type,Accept,Authorization')
+
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'PUT,PATCH,POST,OPTIONS,DELETE,GET')
+        return res.status(200).json({})
+    }
+    next()
+})
 
 
 // port
