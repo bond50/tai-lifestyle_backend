@@ -366,8 +366,6 @@ export const listHomePageBlogs = (req, res) => {
         .populate('postedBy', '_id name')
         .sort({updatedAt: -1})
         .select('_id title slug imgWidth postedBy imgHeight excerpt createdAt updatedAt')
-        .limit(6)
-        .sort({createdAt: -1})
         .exec((err, data) => {
             if (err) {
                 return res.json({
