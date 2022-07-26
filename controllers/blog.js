@@ -115,6 +115,7 @@ export const list = (req, res) => {
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username')
+        .sort({updatedAt: -1})
         .select('_id title slug excerpt imgWidth imgHeight categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
@@ -301,6 +302,7 @@ export const listRelated = (req, res) => {
     Blog.find({_id: {$ne: _id}, categories: {$in: categories}}, {status: 'approved'})
         .limit(limit)
         .populate('postedBy', '_id name  username profile')
+        .sort({updatedAt: -1})
         .select('title imgWidth imgHeight slug excerpt postedBy createdAt updatedAt')
         .exec((err, blogs) => {
             if (err) {
@@ -343,6 +345,7 @@ export const listByUser = (req, res) => {
                 .populate('categories', '_id name slug')
                 .populate('tags', '_id name slug')
                 .populate('postedBy', '_id name username')
+                .sort({updatedAt: -1})
                 .select('_id title accepted  slug postedBy createdAt updatedAt')
                 .exec((err1, data) => {
                     if (err) {
@@ -361,6 +364,7 @@ export const listByUser = (req, res) => {
 export const listHomePageBlogs = (req, res) => {
     Blog.find({accepted: true})
         .populate('postedBy', '_id name')
+        .sort({updatedAt: -1})
         .select('_id title slug imgWidth postedBy imgHeight excerpt createdAt updatedAt')
         .limit(6)
         .sort({createdAt: -1})
@@ -381,7 +385,7 @@ export const featuredBlogs = (req, res) => {
     Blog.find({featured: true, accepted: true})
         .populate('postedBy', '_id name ')
         .select('_id title imgWidth postedBy imgHeight excerpt slug name ')
-        .sort({createdAt: -1})
+        .sort({updatedAt: -1})
         .limit(10)
         .exec((err, data) => {
             if (err) {

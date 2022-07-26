@@ -85,6 +85,7 @@ export const create = (req, res) => {
 export const listFeatured = (req, res) => {
     Page.find({featured: true, accepted: true})
         .select('_id title imgWidth imgHeight icon excerpt slug')
+        .sort({updatedAt: -1})
         .limit(3)
         .exec((err, data) => {
             if (err) {
@@ -99,6 +100,7 @@ export const list = (req, res) => {
     Page.find({accepted: true})
         .populate('categories', '_id name slug')
         .populate('postedBy', '_id name username')
+        .sort({updatedAt: -1})
         .select('_id title slug imgWidth imgHeight excerpt categories  postedBy createdAt updatedAt')
         .sort({createdAt: -1})
         .exec((err, data) => {
@@ -120,7 +122,7 @@ export const listAllServicesCategoriesTags = (req, res) => {
     Page.find({accepted: true})
         .populate('categories', '_id name slug')
         .populate('postedBy', '_id name username profile')
-        .sort({createdAt: -1})
+        .sort({updatedAt: -1})
         .select('_id title imgWidth imgHeight slug excerpt  categories postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
@@ -165,6 +167,7 @@ export const read = (req, res) => {
         // .select("-photo")
         .populate('categories', '_id name slug')
         .populate('postedBy', '_id name username')
+        .sort({updatedAt: -1})
         .select('_id title body accepted icon featured excerpt slug metaTitle metaDesc categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
@@ -181,6 +184,7 @@ export const listServiceNamesAndSlugs = (req, res) => {
     Page.find({})
         .sort({createdAt: -1})
         .select('_id title imgWidth imgHeight slug')
+        .sort({updatedAt: -1})
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -200,6 +204,7 @@ export const listRelated = (req, res) => {
     Page.find({_id: {$ne: _id}, categories: {$in: categories}})
         .limit(limit)
         .select('title slug imgWidth imgHeight ')
+        .sort({updatedAt: -1})
         .exec((err, blogs) => {
             if (err) {
                 return res.status(400).json({
