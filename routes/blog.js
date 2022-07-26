@@ -8,14 +8,12 @@ import {
     read,
     listHomePageBlogs,
     listByUser,
-    listPendingByUser,
     remove,
     update,
     photo,
     listRelated,
     listSearch,
     featuredBlogs,
-    listPending
 }  from '../controllers/blog.js'
 
 import {requireSignin, adminMiddleware, authMiddleware, canUpdateDeleteBlog}  from '../controllers/auth.js'
@@ -24,7 +22,6 @@ import {requireSignin, adminMiddleware, authMiddleware, canUpdateDeleteBlog}  fr
 router.post('/blog', requireSignin, adminMiddleware, create);
 router.get('/blogs', list);
 router.get('/featured-blogs', featuredBlogs);
-router.get('/pending-blogs', requireSignin, adminMiddleware, listPending);
 router.get('/list-recent-blogs', listHomePageBlogs);
 router.post('/blogs-categories-tags', listAllBlogsCategoriesTags);
 router.get('/blog/:slug', read);
@@ -37,7 +34,6 @@ router.get('/blogs/search', listSearch);
 //auth user blog routes
 
 router.post('/user/blog', requireSignin, authMiddleware, create);
-router.get('/:username/pending-blogs', listPendingByUser);
 router.get('/:username/blogs', listByUser);
 router.delete('/user/blog/:slug', requireSignin, authMiddleware, canUpdateDeleteBlog, remove);
 router.put('/user/blog/:slug', requireSignin, authMiddleware, canUpdateDeleteBlog, update);

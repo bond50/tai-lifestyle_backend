@@ -8,6 +8,7 @@ import {errorHandler} from '../helpers/dbErrorHandler.js'
 import fs from 'fs'
 import {smartTrim} from '../helpers/blog.js'
 import User from "../models/user.js"
+import sizeOf from 'image-size'
 import {capitalizeFirstLetter} from "../helpers/importantFunctions.js"
 
 
@@ -35,7 +36,7 @@ export const create = (req, res) => {
                 error: 'At least one category is required'
             });
         }
-
+        const dimensions = sizeOf(fs.readFileSync(files.photo.path))
 
         let page = new Page();
         page.title = title.toLowerCase();
@@ -45,7 +46,11 @@ export const create = (req, res) => {
         page.metaTitle = `${title} | ${process.env.APP_NAME}`;
         page.metaDesc = stripHtml(body.substring(0, 160));
         page.postedBy = req.auth._id;
+        page.imgHeight = dimensions.height
+        page.imgWidth = dimensions.width
+        page.imgType = dimensions.type
         let arrayOfCategories = categories && categories.split(',');
+
 
         if (files.photo) {
             if (files.photo.size > 2000000) {
@@ -78,8 +83,8 @@ export const create = (req, res) => {
     })
 }
 export const listFeatured = (req, res) => {
-    Page.find({featured: true,accepted:true})
-        .select('_id title icon excerpt slug')
+    Page.find({featured: true, accepted: true})
+        .select('_id title imgWidth imgHeight icon excerpt slug')
         .limit(3)
         .exec((err, data) => {
             if (err) {
@@ -94,7 +99,7 @@ export const list = (req, res) => {
     Page.find({accepted: true})
         .populate('categories', '_id name slug')
         .populate('postedBy', '_id name username')
-        .select('_id title slug excerpt categories  postedBy createdAt updatedAt')
+        .select('_id title slug imgWidth imgHeight excerpt categories  postedBy createdAt updatedAt')
         .sort({createdAt: -1})
         .exec((err, data) => {
             if (err) {
@@ -112,11 +117,11 @@ export const listAllServicesCategoriesTags = (req, res) => {
     let categories;
     let tags;
 
-    Page.find({accepted:true})
+    Page.find({accepted: true})
         .populate('categories', '_id name slug')
         .populate('postedBy', '_id name username profile')
         .sort({createdAt: -1})
-        .select('_id title slug excerpt  categories postedBy createdAt updatedAt')
+        .select('_id title imgWidth imgHeight slug excerpt  categories postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -137,7 +142,6 @@ export const listAllServicesCategoriesTags = (req, res) => {
             });
         });
 };
-
 
 export const photo = (req, res) => {
     const slug = req.params.slug.toLowerCase();
@@ -176,7 +180,7 @@ export const read = (req, res) => {
 export const listServiceNamesAndSlugs = (req, res) => {
     Page.find({})
         .sort({createdAt: -1})
-        .select('_id title slug')
+        .select('_id title imgWidth imgHeight slug')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -190,12 +194,12 @@ export const listServiceNamesAndSlugs = (req, res) => {
 
 export const listRelated = (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 30;
-    const {categories} = req.body.service;
+    const {_id, categories} = req.body.service;
 
 
-    Page.find({categories: {$in: categories}})
+    Page.find({_id: {$ne: _id}, categories: {$in: categories}})
         .limit(limit)
-        .select('title slug')
+        .select('title slug imgWidth imgHeight ')
         .exec((err, blogs) => {
             if (err) {
                 return res.status(400).json({
@@ -249,6 +253,7 @@ export const update = (req, res) => {
             oldPage = _.merge(oldPage, fields);
             oldPage.slug = slugBeforeMerge;
 
+
             const {body, desc, categories, tags} = fields;
 
             if (body) {
@@ -260,6 +265,8 @@ export const update = (req, res) => {
                 oldPage.categories = categories.split(',');
             }
 
+            const dimensions = sizeOf(fs.readFileSync(files.photo.path))
+
 
             if (files.photo) {
                 if (files.photo.size > 2000000) {
@@ -269,6 +276,9 @@ export const update = (req, res) => {
                 }
                 oldPage.photo.data = fs.readFileSync(files.photo.path);
                 oldPage.photo.contentType = files.photo.type;
+                oldPage.imgHeight = dimensions.height
+                oldPage.imgWidth = dimensions.width
+                oldPage.imgType = dimensions.type
             }
 
             oldPage.save((err, result) => {
@@ -284,64 +294,3 @@ export const update = (req, res) => {
     });
 };
 
-export const listPending = (req, res) => {
-    Page.find({accepted: false})
-        .populate('postedBy', '_id name username')
-        .select('_id title accepted slug postedBy createdAt updatedAt')
-        .exec((err, data) => {
-            if (err) {
-                return res.json({
-                    error: errorHandler(err)
-                });
-            }
-            res.json(data);
-        });
-};
-
-
-export const listByUser = (req, res) => {
-    User.findOne({username: req.params.username}).exec(
-        (err, user) => {
-            if (err) {
-                return res.status(400).json({
-                    error: errorHandler(err)
-                });
-            }
-            Page.find({postedBy: user._id, accepted: true})
-                .populate('categories', '_id name slug')
-                .populate('postedBy', '_id name username')
-                .select('_id title accepted slug postedBy createdAt updatedAt')
-                .exec((err1, data) => {
-                    if (err) {
-                        return res.status(400).json({
-                            error: errorHandler(err)
-                        });
-                    }
-                    res.json(data)
-                })
-
-        })
-}
-export const listPendingByUser = (req, res) => {
-    User.findOne({username: req.params.username}).exec(
-        (err, user) => {
-            if (err) {
-                return res.status(400).json({
-                    error: errorHandler(err)
-                });
-            }
-            Page.find({postedBy: user._id, accepted: false})
-                .populate('categories', '_id name slug')
-                .populate('postedBy', '_id name username')
-                .select('_id title accepted slug postedBy createdAt updatedAt')
-                .exec((err1, data) => {
-                    if (err) {
-                        return res.status(400).json({
-                            error: errorHandler(err)
-                        });
-                    }
-                    res.json(data)
-                })
-
-        })
-}

@@ -9,7 +9,7 @@ import _ from 'lodash'
 import {errorHandler} from '../helpers/dbErrorHandler.js'
 import fs from 'fs'
 import {smartTrim} from '../helpers/blog.js'
-
+import sizeOf from 'image-size'
 
 export const create = (req, res) => {
     let form = new formidable.IncomingForm();
@@ -22,6 +22,7 @@ export const create = (req, res) => {
         }
 
         const {title, body, categories, tags} = fields;
+
 
         if (!title || !title.length) {
             return res.status(400).json({
@@ -59,15 +60,20 @@ export const create = (req, res) => {
         let arrayOfCategories = categories && categories.split(',');
         let arrayOfTags = tags && tags.split(',');
 
+        const dimensions = sizeOf(fs.readFileSync(files.photo.path))
+
 
         if (files.photo) {
-            if (files.photo.size > 2000000) {
+            if (files.photo.size > 1000000) {
                 return res.status(400).json({
-                    error: 'Image should be less then 2mb in size'
+                    error: 'Image should be less then 1mb in size'
                 });
             }
             blog.photo.data = fs.readFileSync(files.photo.path);
             blog.photo.contentType = files.photo.type;
+            blog.imgHeight = dimensions.height
+            blog.imgWidth = dimensions.width
+            blog.imgType = dimensions.type
         }
 
         blog.save((err, result) => {
@@ -76,6 +82,7 @@ export const create = (req, res) => {
                     error: errorHandler(err)
                 });
             }
+            // res.json(result);
 
             Blog.findByIdAndUpdate(result._id, {$push: {categories: arrayOfCategories}}, {new: true}).exec(
                 (err, result) => {
@@ -108,7 +115,7 @@ export const list = (req, res) => {
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username')
-        .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
+        .select('_id title slug excerpt imgWidth imgHeight categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -119,8 +126,8 @@ export const list = (req, res) => {
         });
 };
 
-export const listAllBlogsCategoriesTags = (req, res) => {
 
+export const listAllBlogsCategoriesTags = (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 4;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
 
@@ -135,7 +142,7 @@ export const listAllBlogsCategoriesTags = (req, res) => {
         .sort({updatedAt: -1})
         .skip(skip)
         .limit(limit)
-        .select('_id title accepted slug excerpt categories tags postedBy createdAt updatedAt')
+        .select('_id title accepted slug imgWidth imgHeight excerpt categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -173,7 +180,7 @@ export const read = (req, res) => {
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username')
-        .select('_id title body accepted featured slug mtitle mdesc categories tags postedBy createdAt updatedAt')
+        .select('_id title body imgWidth imgHeight imgType accepted featured slug mtitle mdesc categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -225,7 +232,8 @@ export const update = (req, res) => {
             oldBlog = _.merge(oldBlog, fields);
             oldBlog.slug = slugBeforeMerge;
 
-            const {body, desc, categories, tags} = fields;
+            const {body, categories, tags} = fields;
+
 
             if (body) {
                 oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...');
@@ -240,14 +248,22 @@ export const update = (req, res) => {
                 oldBlog.tags = tags.split(',');
             }
 
+
             if (files.photo) {
+
                 if (files.photo.size > 10000000) {
                     return res.status(400).json({
                         error: 'Image should be less then 1mb in size'
                     });
                 }
+
+                const dimensions = sizeOf(fs.readFileSync(files.photo.path))
                 oldBlog.photo.data = fs.readFileSync(files.photo.path);
                 oldBlog.photo.contentType = files.photo.type;
+                oldBlog.imgHeight = dimensions.height
+                oldBlog.imgWidth = dimensions.width
+                oldBlog.imgType = dimensions.type
+
             }
 
             oldBlog.save((err, result) => {
@@ -285,7 +301,7 @@ export const listRelated = (req, res) => {
     Blog.find({_id: {$ne: _id}, categories: {$in: categories}}, {status: 'approved'})
         .limit(limit)
         .populate('postedBy', '_id name  username profile')
-        .select('title slug excerpt postedBy createdAt updatedAt')
+        .select('title imgWidth imgHeight slug excerpt postedBy createdAt updatedAt')
         .exec((err, blogs) => {
             if (err) {
                 return res.status(400).json({
@@ -344,9 +360,10 @@ export const listByUser = (req, res) => {
 
 export const listHomePageBlogs = (req, res) => {
     Blog.find({accepted: true})
-        .select('_id title slug excerpt createdAt updatedAt')
-        .limit(3)
-        .sort({updatedAt: -1})
+        .populate('postedBy', '_id name')
+        .select('_id title slug imgWidth postedBy imgHeight excerpt createdAt updatedAt')
+        .limit(4)
+        .sort({createdAt: -1})
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -357,48 +374,13 @@ export const listHomePageBlogs = (req, res) => {
         });
 };
 
-export const listPending = (req, res) => {
 
-    Blog.find({accepted: false})
-        .populate('postedBy', '_id name username')
-        .select('_id title accepted slug postedBy createdAt updatedAt')
-        .exec((err, data) => {
-            if (err) {
-                return res.json({
-                    error: errorHandler(err)
-                });
-            }
 
-            res.json(data);
-        });
-};
-export const listPendingByUser = (req, res) => {
-    User.findOne({username: req.params.username}).exec(
-        (err, user) => {
-            if (err) {
-                return res.status(400).json({
-                    error: errorHandler(err)
-                });
-            }
-            Blog.find({postedBy: user._id, accepted: false})
-                .populate('postedBy', '_id name username')
-                .select('_id title accepted slug postedBy createdAt updatedAt')
-                .exec((err1, data) => {
-                    if (err) {
-                        return res.status(400).json({
-                            error: errorHandler(err)
-                        });
-                    }
-                    res.json(data)
-                })
-
-        })
-}
 
 export const featuredBlogs = (req, res) => {
     Blog.find({featured: true, accepted: true})
         .populate('postedBy', '_id name ')
-        .select('_id title excerpt slug name ')
+        .select('_id title imgWidth postedBy imgHeight excerpt slug name ')
         .sort({createdAt: -1})
         .limit(10)
         .exec((err, data) => {

@@ -15,6 +15,15 @@ const serviceSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        imgHeight: {
+            type: Number
+        },
+        imgWidth: {
+            type: Number
+        },
+        imgType: {
+            type: String
+        },
         icon: {
             type: String,
         },

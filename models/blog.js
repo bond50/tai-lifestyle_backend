@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const {ObjectId} = mongoose.Schema;
 
 const blogSchema = new mongoose.Schema(
@@ -42,7 +43,17 @@ const blogSchema = new mongoose.Schema(
         },
         photo: {
             data: Buffer,
-            contentType: String
+            contentType: String,
+
+        },
+        imgHeight: {
+            type: Number
+        },
+        imgWidth: {
+            type: Number
+        },
+        imgType: {
+            type: String
         },
         categories: [{type: ObjectId, ref: 'Category', required: true}],
         tags: [{type: ObjectId, ref: 'Tag', required: true}],
@@ -51,7 +62,6 @@ const blogSchema = new mongoose.Schema(
             ref: 'User'
         }
     },
-
     {timestamps: true}
 );
 
