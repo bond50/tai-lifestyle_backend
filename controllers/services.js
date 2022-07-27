@@ -168,7 +168,7 @@ export const read = (req, res) => {
         .populate('categories', '_id name slug')
         .populate('postedBy', '_id name username')
         .sort({updatedAt: -1})
-        .select('_id title body accepted icon featured excerpt slug metaTitle metaDesc categories tags postedBy createdAt updatedAt')
+        .select('_id title body accepted icon imgWidth imgHeight featured excerpt slug metaTitle metaDesc categories tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
