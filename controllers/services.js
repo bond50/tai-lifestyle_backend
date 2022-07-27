@@ -272,8 +272,6 @@ export const update = (req, res) => {
 
 
 
-
-
             if (files.photo) {
                  const dimensions = sizeOf(fs.readFileSync(files.photo.path))
                 if (files.photo.size > 2000000) {
