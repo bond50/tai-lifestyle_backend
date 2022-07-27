@@ -86,7 +86,7 @@ export const listFeatured = (req, res) => {
     Page.find({featured: true, accepted: true})
         .select('_id title imgWidth imgHeight icon excerpt slug')
         .sort({updatedAt: -1})
-        .limit(3)
+        .limit(6)
         .exec((err, data) => {
             if (err) {
                 return res.json({
