@@ -270,10 +270,12 @@ export const update = (req, res) => {
                 oldPage.categories = categories.split(',');
             }
 
-            const dimensions = sizeOf(fs.readFileSync(files.photo.path))
+
+
 
 
             if (files.photo) {
+                 const dimensions = sizeOf(fs.readFileSync(files.photo.path))
                 if (files.photo.size > 2000000) {
                     return res.status(400).json({
                         error: 'Image should be less then 2mb in size'
