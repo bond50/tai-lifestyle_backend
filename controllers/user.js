@@ -6,6 +6,7 @@ import fs from "fs";
 import slugify from "slugify";
 import {errorHandler} from "../helpers/dbErrorHandler.js";
 import probe from "probe-image-size";
+import axios from "axios";
 
 export const read = (req, res) => {
     req.profile.hashed_password = undefined;
