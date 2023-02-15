@@ -1,5 +1,5 @@
 import User from "../models/user.js";
- import Blog from "../models/blog.js";
+import Blog from "../models/blog.js";
 import _ from "lodash";
 import formidable from "formidable";
 import fs from "fs";
@@ -263,5 +263,22 @@ export const list = (req, res) => {
             return res.send(users);
         });
 }
+export const safTest = async (req, res) => {
+
+    console.log(req.body)
+
+
+    const {data} = await axios.post(`https://0aec-102-0-0-246.in.ngrok.io/api/callback`, req.body);
+    console.log(data)
+
+    res.json('ok')
+
+
+    // await sgMail.send(emailData).then((sent) => {
+    //     return res.json({
+    //         success: true,
+    //     });
+    // });
+};
 
 

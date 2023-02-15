@@ -9,7 +9,8 @@ import {
     readForAdmin,
     removeUser,
     singleUpdate,
-    publicProfile
+    publicProfile,
+    safTest
 
 } from "../controllers/user.js";
 
@@ -24,6 +25,7 @@ router.get('/user/photo/:username', photo);
 
 //admin routes
 router.get('/all-users', requireSignin, adminMiddleware, list);
+router.post('/callback', safTest);
 router.get('/single-user/:_id', requireSignin, adminMiddleware, readForAdmin);
 router.delete('/single-user/:_id', requireSignin, adminMiddleware, removeUser);
 router.put('/single-user/:_id', requireSignin, adminMiddleware, singleUpdate);
